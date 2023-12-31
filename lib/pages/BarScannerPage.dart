@@ -24,101 +24,105 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    double boxSize = MediaQuery.of(context).size.width * 0.8; // Adjust as needed
+    double boxSize = MediaQuery.of(context).size.width * 0.9; // Adjust as needed
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Barcode Scanner'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                QRView(
-                  key: _barcodeKey,
-                  onQRViewCreated: (controller) {
-                    setState(() {
-                      _barcodeController = controller;
-                    });
-                    controller.scannedDataStream.listen((Barcode scanData) {
-                      if (scanData.code!.isNotEmpty) {
-                        if (scanData.format == BarcodeFormat.qrcode) {
-                          setState(() {
-                            scanMessage = "It's a QR Code. Please try again with a Barcode.";
-                          });
+      body: Container(
+        padding: const EdgeInsets.only(top: 100.0, left: 20.0,right: 20.0),
+        color: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  QRView(
+                    key: _barcodeKey,
+                    onQRViewCreated: (controller) {
+                      setState(() {
+                        _barcodeController = controller;
+                      });
+                      controller.scannedDataStream.listen((Barcode scanData) {
+                        if (scanData.code!.isNotEmpty) {
+                          if (scanData.format == BarcodeFormat.qrcode) {
+                            setState(() {
+                              scanMessage = "It's a QR Code. Please try again with a Barcode.";
+                            });
+                          } else {
+                            // Handle barcode scan here
+                            setState(() {
+                              scanMessage = "Barcode Detected";
+                              lastScanResult = scanData.code!;
+                            });
+                          }
                         } else {
-                          // Handle barcode scan here
                           setState(() {
-                            scanMessage = "Barcode Detected";
-                            lastScanResult = scanData.code!;
+                            scanMessage = "Please position the Barcode within the camera view";
                           });
                         }
-                      } else {
-                        setState(() {
-                          scanMessage = "Please position the Barcode within the camera view";
-                        });
-                      }
-                    });
-                  },
-                ),
-                Center(
-                  child: Container(
-                    width: boxSize,
-                    height: boxSize,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.transparent,
-                        width: 2,
+                      });
+                    },
+                  ),
+                  Center(
+                    child: Container(
+                      width: boxSize,
+                      height: boxSize,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.transparent,
+                          width: 2,
+                        ),
                       ),
-                    ),
-                    child: ClipPath(
-                      clipper: CircularScannerClipper(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.green,
-                            width: 2,
+                      child: ClipPath(
+                        clipper: CircularScannerClipper(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.green,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            height: 300,
-            width: double.infinity,
-            color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Text(
-                  scanMessage,
-                  style: const TextStyle(fontSize: 18.0, color: Colors.black),
-                ),
-                if (scanMessage == "Barcode Detected")
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        scanMessage = "Please position the Barcode within the camera view";
-                      });
-                      // Navigate to a different page and pass the barcode value
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BarcodeResultPage(lastScanResult),
-                        ),
-                      );
-                    },
-                    child: const Text('Scan Now'),
+            Container(
+              height: 450,
+              width: boxSize,
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    scanMessage,
+                    style: const TextStyle(fontSize: 18.0, color: Colors.black),
                   ),
-              ],
+                  if (scanMessage == "Barcode Detected")
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          scanMessage = "Please position the Barcode within the camera view";
+                        });
+                        // Navigate to a different page and pass the barcode value
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BarcodeResultPage(lastScanResult),
+                          ),
+                        );
+                      },
+                      child: const Text('Scan Now'),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -141,45 +145,45 @@ class BarcodeResultPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Scan Result'),
       ),
-      body: Column(
-        children: [
-          // Top section with "Successfully Scanned!!" text
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: const Align(
+      body: Container(
+        padding: const EdgeInsets.only(top: 50.0),
+        child: Column(
+          children: [
+            // Top section with "Successfully Scanned!!" text
+            const Align(
               alignment: Alignment.topCenter,
               child: Text(
                 'Successfully Scanned!!',
                 style: TextStyle(fontSize: 18.0, color: Colors.green, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
 
-          // Centered section with barcode result, a bit higher than the center
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              margin: const EdgeInsets.only(top: 70.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Barcode Value',
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      barcodeResult,
-                      style: const TextStyle(fontSize: 18.0),
-                    ),
-                  ],
+            // Centered section with barcode result, a bit higher than the center
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 70.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Barcode Value',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        barcodeResult,
+                        style: const TextStyle(fontSize: 18.0),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

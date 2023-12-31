@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                     // Navigate to the first page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => QrcodeScannerPage()),
+                      MaterialPageRoute(builder: (context) => const QrcodeScannerPage()),
                     );
                   },
                   text: 'Scan QR',
@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                     // Navigate to the second page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => BarcodeScannerPage()),
+                      MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
                     );
                   },
                   text: 'Scan Barcode',
