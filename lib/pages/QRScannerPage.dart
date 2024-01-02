@@ -192,6 +192,7 @@ class QrcodeResultPage extends StatelessWidget {
   }
 }
 
+
 void main() {
   runApp(const MaterialApp(
     home: QrcodeScannerPage(),

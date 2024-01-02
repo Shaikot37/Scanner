@@ -35,10 +35,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
         color: Colors.white,
         child: Column(
           children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  QRView(
+            Stack(
+              children: [
+                SizedBox(
+                  height: 100,
+                  child: QRView(
                     key: _barcodeKey,
                     onQRViewCreated: (controller) {
                       setState(() {
@@ -65,35 +66,34 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                       });
                     },
                   ),
-                  Center(
-                    child: Container(
-                      width: boxSize,
-                      height: boxSize,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.transparent,
-                          width: 2,
-                        ),
+                ),
+                Center(
+                  child: Container(
+                    width: boxSize,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.transparent,
+                        width: 2,
                       ),
-                      child: ClipPath(
-                        clipper: CircularScannerClipper(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.green,
-                              width: 2,
-                            ),
+                    ),
+                    child: ClipPath(
+                      clipper: CircularScannerClipper(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 2,
                           ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Container(
-              height: 450,
-              width: boxSize,
+
               color: Colors.white,
               padding: const EdgeInsets.all(16.0),
               child: Column(
